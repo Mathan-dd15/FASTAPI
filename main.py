@@ -3,6 +3,8 @@ from pydantic import BaseModel
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, declarative_base, Session
 from sqlalchemy.exc import SQLAlchemyError
+import requests
+
 
 DATABASE_URL = "sqlite:///./db.sqlite"
 
@@ -79,3 +81,12 @@ def delete_user(id:int,user:UserModel, db:Session = Depends(get_db)):
     except SQLAlchemyError:
         db.rollback()
         return {"error": "Failed to delete user"}
+
+@app.get("/find_factorial/{n}")
+def find_factorial(n: int):
+    url = "https://jvikx3uk4i.execute-api.us-east-1.amazonaws.com/default/factorial"
+    response = requests.post(url, json={"number": n})
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {"error": "Failed to calculate factorial"}
