@@ -84,7 +84,7 @@ def delete_user(id:int,user:UserModel, db:Session = Depends(get_db)):
 
 @app.get("/find_factorial/{n}")
 def find_factorial(n: int):
-    url = "https://jvikx3uk4i.execute-api.us-east-1.amazonaws.com/default/factorial"
+    url = "https://w18fnnr0tf.execute-api.eu-north-1.amazonaws.com/default/factorial"
     response = requests.post(url, json={"number": n})
     if response.status_code == 200:
         return response.json()
