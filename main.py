@@ -82,11 +82,19 @@ def delete_user(id:int,user:UserModel, db:Session = Depends(get_db)):
         db.rollback()
         return {"error": "Failed to delete user"}
 
+import requests
+
 @app.get("/find_factorial/{n}")
 def find_factorial(n: int):
     url = "https://w18fnnr0tf.execute-api.eu-north-1.amazonaws.com/"
+
     response = requests.post(url, json={"number": n})
-    if response.status_code == 200:
+
+    try:
         return response.json()
-    else:
-        return {"error": "Failed to calculate factorial"}
+    except:
+        return {
+            "error": "Invalid response",
+            "status": response.status_code,
+            "response": response.text
+        }
