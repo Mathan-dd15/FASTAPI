@@ -86,7 +86,7 @@ import requests
 
 @app.get("/find_factorial/{n}")
 def find_factorial(n: int):
-    url = "https://w18fnnr0tf.execute-api.eu-north-1.amazonaws.com/"
+    url = "https://w18fnnr0tf.execute-api.eu-north-1.amazonaws.com/default/factorial"
 
     response = requests.post(url, json={"number": n})
     print("response",response)
