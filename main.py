@@ -89,6 +89,7 @@ def find_factorial(n: int):
     url = "https://w18fnnr0tf.execute-api.eu-north-1.amazonaws.com/"
 
     response = requests.post(url, json={"number": n})
+    print("response",response)
 
     try:
         return response.json()
