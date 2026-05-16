@@ -1,18 +1,45 @@
-name : my-workflow
+name: FastAPI Deploy
+
 on:
   push:
     branches:
       - main
-    
+
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: List Files
-        run: |
-          ls
-          echo "Raja"
+      - name: Deploy to AWS EC2
+        uses: appleboy/ssh-action@v1.0.3
+
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+
+          script: |
+            cd /home/ubuntu
+
+            if [ ! -d "FASTAPI" ]; then
+              git clone https://github.com/Mathan-dd15/FASTAPI.git FASTAPI
+            fi
+
+            cd FASTAPI
+
+            git pull origin main
+
+            sudo apt update
+
+            sudo apt install python3-pip -y
+
+            pip3 install -r requirements.txt
+
+            pip3 install uvicorn
+
+            pkill -f uvicorn || true
+
+            nohup uvicorn main:app --host 0.0.0.0 --port 8000 > output.log 2>&1 &
