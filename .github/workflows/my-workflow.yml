@@ -24,16 +24,18 @@ jobs:
           script: |
             cd /home/ubuntu
 
+            # Clone repo if not exists
             if [ ! -d "FASTAPI" ]; then
               git clone https://github.com/Mathan-dd15/FASTAPI.git FASTAPI
             fi
 
             cd FASTAPI
 
+            # Pull latest code
             git pull origin main
 
+            # Install required packages
             sudo apt update
-
             sudo apt install python3-pip python3-venv -y
 
             # Create virtual environment if not exists
@@ -44,10 +46,14 @@ jobs:
             # Activate virtual environment
             source venv/bin/activate
 
+            # Upgrade pip
             pip install --upgrade pip
 
+            # Install dependencies
             pip install -r requirements.txt
 
+            # Stop old FastAPI process
             pkill -f uvicorn || true
 
-            nohup venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 > output.log 2>&1 &
+            # Start FastAPI in background
+            nohup venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 > output.log 2>&1 < /dev/null &
